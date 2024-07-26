@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Board</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Stock Information</h2>
+
+    <!-- Search Form -->
+    <form action="/search" method="get">
+        <input type="text" name="stockName" placeholder="Enter stock name" />
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Stock ID</th>
+            <th>Index Name</th>
+            <th>Current Value</th>
+            <th>Create Time</th>
+            <th>URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 데이터를 반복하여 테이블의 각 행을 생성합니다 -->
+        <tr th:each="stock : ${stocks}">
+            <td th:text="${stock.no}"></td>
+            <td th:text="${stock.stockName}"></td>
+            <td th:text="${stock.price}"></td>
+            <td th:text="${stock.diffAmount}"></td>
+            <td>
+                <a th:href="${stock.discussionRoomUrl}" th:text="${stock.discussionRoomUrl}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
