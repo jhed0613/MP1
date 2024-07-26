@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class KorStockEntity {
     @Id
-    private String no;
     private String stockName;
+    private String no;
     private String price;
     private String diffAmount;
     private String dayRange;
