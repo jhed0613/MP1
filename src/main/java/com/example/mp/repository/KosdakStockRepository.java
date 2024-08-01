@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface KosdakStockRepository extends JpaRepository<KosdakStockEntity, String> {
 //    List<KosdakStockDto> findByStockName(String stockName);
-    List<KospiStockEntity> findByStockName(String stockName);
+    List<KosdakStockEntity> findByStockName(String stockName);
 }

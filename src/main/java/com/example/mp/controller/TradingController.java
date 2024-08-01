@@ -22,9 +22,10 @@ public class TradingController {
             String stockName = buyRequest.getStockName();
 
             int quantity = buyRequest.getQuantity();
+            boolean isKospi = buyRequest.isKospi(); // BuyRequest에서 isKospi 가져오기
 
             // 주식 구매 처리
-            tradingService.buyStock(username, stockName, quantity); // 실제 구매 로직 호출
+            tradingService.buyStock(username, stockName, quantity, isKospi); // 실제 구매 로직 호출
 
             return ResponseEntity.ok("매수 성공");
         } catch (NumberFormatException e) {

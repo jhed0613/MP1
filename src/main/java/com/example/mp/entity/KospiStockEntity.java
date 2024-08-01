@@ -8,7 +8,7 @@ import lombok.Data;
 @Entity
 @Table(name = "kospi")
 @Data
-public class KospiStockEntity {
+public class KospiStockEntity implements StockEntity{
     @Id
     private String stockName;
     private String no;

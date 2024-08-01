@@ -20,6 +20,7 @@ public class UserStockEntity {
     private UserEntity user;
 
     private String stockName; // 주식 이름
+    private String stockType; // 코스피, 코스닥
     private int quantity; // 보유 주식 수량
     private double pricePerShare; // 주식 당 가격
     private double averagePrice; // 평균 구매 가격

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserStockRepository extends JpaRepository<UserStockEntity, Long> {
     UserStockEntity findByStockNameAndUser(String stockName, UserEntity user);
+    UserStockEntity findByStockNameAndStockTypeAndUser(String stockName, String stockType, UserEntity user);
 
 }
 
