@@ -50,8 +50,10 @@
     <logger name="jdbc.sqlonly" level="info" appender-ref="console"></logger>
     <logger name="jdbc.resultsettable" level="info" appender-ref="console"></logger>
 
-    <root level="info">
+    <root level="DEBUG">
         <appender-ref ref="console" />
+        <appender-ref ref="DEBUG_LOG" />
+        <appender-ref ref="INFO_LOG" />
         <!--
     <appender-ref ref="DEBUG_LOG" />
     <appender-ref ref="INFO_LOG" />

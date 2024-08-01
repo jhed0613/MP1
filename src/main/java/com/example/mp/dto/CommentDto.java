@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Integer commentId;
     private int boardIdx;  // BoardEntity 대신 boardIdx
-    private String userId;  // UserEntity 대신 userId
+    private Long userId;  // UserEntity 대신 userId
     private String content;
     private LocalDateTime createTime;  // LocalDateTime으로 변경
 }

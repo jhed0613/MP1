@@ -6,9 +6,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "korStock")
+@Table(name = "kosdak")
 @Data
-public class KorStockEntity {
+public class KosdakStockEntity {
     @Id
     private String stockName;
     private String no;
@@ -18,9 +18,9 @@ public class KorStockEntity {
     private String parValue;
     private String marketCap;
     private String numberOfListedShares;
-    private String foreignOwnRate;
     private String turnover;
     private String per;
     private String roe;
-    private String discussionRoomUrl;
+    private String foreignOwnRate;
+//    private String discussionRoomUrl;
 }

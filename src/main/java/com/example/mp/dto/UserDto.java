@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 
 @Data
 public class UserDto {
-    private String id;
+    private Long id;
     private String password;
     private String userName;
     private String email;
-    private int points;
+    private int coin;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

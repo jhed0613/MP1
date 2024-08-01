@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>주식 판매</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>주식 판매하기</h1>
+  <form th:action="@{/trade/sell}" method="post">
+    <div class="form-group">
+      <label for="stockName">주식 이름</label>
+      <input type="text" id="stockName" th:name="stockName" class="form-control" required/>
+    </div>
+    <div class="form-group">
+      <label for="quantity">판매 수량</label>
+      <input type="number" id="quantity" th:name="quantity" min="1" class="form-control" required/>
+    </div>
+    <input type="hidden" th:name="userId" th:value="${userId}"/>
+    <button type="submit" class="btn btn-danger">판매</button>
+  </form>
+</div>
+</body>
+</html>
