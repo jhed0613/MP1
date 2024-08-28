@@ -24,6 +24,7 @@ public class UserStockEntity {
     private double pricePerShare; // 주식 당 가격
     private double averagePrice; // 평균 구매 가격
     private LocalDateTime purchaseDate; // 날짜
+    private String stockType;
 
     // 현재 주식 가격을 기반으로 총 가치를 계산하는 메서드
     public double getTotalValue() {

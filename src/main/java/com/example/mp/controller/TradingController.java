@@ -24,7 +24,7 @@ public class TradingController {
             int quantity = buyRequest.getQuantity();
 
             // 주식 구매 처리
-            tradingService.buyStock(username, stockName, quantity); // 실제 구매 로직 호출
+            tradingService.buyStock(username, stockName, quantity);
 
             return ResponseEntity.ok("매수 성공");
         } catch (NumberFormatException e) {

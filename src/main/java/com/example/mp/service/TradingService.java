@@ -32,11 +32,13 @@ public class TradingService {
             throw new RuntimeException("존재하지 않는 사용자입니다.");
         }
 //        KospiStockEntity stock = kospiStockRepository.findById(stockName).orElseThrow(() -> new RuntimeException(" 무엇? "));
+        // 코스피 정보가 userStock과 직접적인 테이블 연결이 없지만 같이 매칭될 수 있는 부분.
         List<KospiStockEntity> stocks = kospiStockRepository.findByStockName(stockName);
         if (stocks.isEmpty()) {
             throw new RuntimeException("주식이 존재하지 않습니다: " + stockName);
         }
 
+        // stocks 의 0 번째 인 이유는 기본키의 stockName 부분을 가져왔기 때문에 중복되지않는 하나의 값만 나옴 = 0번째가 내가 원하는 주식 값.
         KospiStockEntity stock = stocks.get(0); // 첫 번째 주식 선택
         String a = stock.getPrice().replaceAll("[^0-9]", "");
 //        double price = Double.parseDouble(stock.getPrice()); // 가격 가져오기
@@ -59,6 +61,7 @@ public class TradingService {
             userStock.setQuantity(quantity);
             userStock.setPricePerShare(price); // 주식 당 가격 설정
             userStock.setAveragePrice(price); // 평균 가격 설정 (처음 구매 시)
+            userStock.setStockType("kospi");
         } else {
             // 평균 가격 업데이트
             double totalCost = (userStock.getAveragePrice() * userStock.getQuantity()) + (price * quantity);
