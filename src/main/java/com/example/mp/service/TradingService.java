@@ -1,8 +1,10 @@
 package com.example.mp.service;
 
+import com.example.mp.entity.KosdaqStockEntity;
 import com.example.mp.entity.KospiStockEntity;
 import com.example.mp.entity.UserEntity;
 import com.example.mp.entity.UserStockEntity;
+import com.example.mp.repository.KosdaqStockRepository;
 import com.example.mp.repository.KospiStockRepository;
 import com.example.mp.repository.UserRepository;
 import com.example.mp.repository.UserStockRepository;
@@ -23,26 +25,40 @@ public class TradingService {
     private KospiStockRepository kospiStockRepository;
 
     @Autowired
-    private UserStockRepository userStockRepository;
+    private KosdaqStockRepository kosdaqStockRepository;
 
-    public void buyStock(String username, String stockName, int quantity) {
+    @Autowired
+    private UserStockRepository userStockRepository;
+    public void buyStock(String username, String stockName, int quantity, String stockType) {
         UserEntity user = userRepository.findByUsername(username);
 
         if (user == null) {
             throw new RuntimeException("존재하지 않는 사용자입니다.");
         }
 
-        // 코스피 정보가 userStock과 직접적인 테이블 연결이 없지만 같이 매칭될 수 있는 부분.
-        List<KospiStockEntity> stocks = kospiStockRepository.findByStockName(stockName);
-        if (stocks.isEmpty()) {
-            throw new RuntimeException("주식이 존재하지 않습니다: " + stockName);
+        double price;
+
+        // stockType 을 기준으로 코스피인지 코스닥인지 나누어 처리
+        if (stockType.equalsIgnoreCase("kospi")) {
+            // 코스피 정보가 userStock과 직접적인 테이블 연결이 없지만 같이 매칭될 수 있는 부분.
+            List<KospiStockEntity> stocks = kospiStockRepository.findByStockName(stockName);
+            if (stocks.isEmpty()) {
+                throw new RuntimeException("코스피 주식이 존재하지 않습니다: " + stockName);
+            }
+            // stocks 의 0 번째 인 이유는 기본키의 stockName 부분을 가져왔기 때문에 중복되지않는 하나의 값만 나옴 = 0번째가 내가 원하는 주식 값.
+            KospiStockEntity stock = stocks.get(0);
+            price = extractPrice(stock.getPrice());
+        } else if (stockType.equalsIgnoreCase("kosdaq")) {
+            List<KosdaqStockEntity> stocks = kosdaqStockRepository.findByStockName(stockName);
+            if (stocks.isEmpty()) {
+                throw new RuntimeException("코스닥 주식이 존재하지 않습니다: " + stockName);
+            }
+            KosdaqStockEntity stock = stocks.get(0);
+            price = extractPrice(stock.getPrice());
+        } else {
+            throw new RuntimeException("잘못된 시장 타입입니다: " + stockType);
         }
 
-        // stocks 의 0 번째 인 이유는 기본키의 stockName 부분을 가져왔기 때문에 중복되지않는 하나의 값만 나옴 = 0번째가 내가 원하는 주식 값.
-        KospiStockEntity stock = stocks.get(0); // 첫 번째 주식 선택
-        String a = stock.getPrice().replaceAll("[^0-9]", "");
-//        double price = Double.parseDouble(stock.getPrice()); // 가격 가져오기
-        double price = Double.parseDouble(a);
         double totalPrice = price * quantity;
 
         if (user.getCoin() < totalPrice) {
@@ -59,17 +75,69 @@ public class TradingService {
             userStock.setUser(user);
             userStock.setStockName(stockName);
             userStock.setQuantity(quantity);
-            userStock.setPricePerShare(price); // 주식 당 가격 설정
-            userStock.setAveragePrice(price); // 평균 가격 설정 (처음 구매 시)
-            userStock.setStockType("kospi");
+            userStock.setPricePerShare(price);
+            userStock.setAveragePrice(price);
+            userStock.setTotalPrice(price * quantity);
+            userStock.setStockType(stockType.toLowerCase()); // kospi 또는 kosdaq
         } else {
-            // 평균 가격 업데이트
             double totalCost = (userStock.getAveragePrice() * userStock.getQuantity()) + (price * quantity);
             userStock.setQuantity(userStock.getQuantity() + quantity);
-            userStock.setAveragePrice(totalCost / userStock.getQuantity()); // 새로운 평균 가격 계산
+            userStock.setAveragePrice(totalCost / userStock.getQuantity());  // 새로운 평균 가격 계산
+            userStock.setTotalPrice(totalCost);
         }
         userStockRepository.save(userStock);
     }
+
+    private double extractPrice(String priceString) {
+        return Double.parseDouble(priceString.replaceAll("[^0-9]", ""));
+    }
+
+
+//    public void buyStock(String username, String stockName, int quantity) {
+//        UserEntity user = userRepository.findByUsername(username);
+//
+//        if (user == null) {
+//            throw new RuntimeException("존재하지 않는 사용자입니다.");
+//        }
+//
+//        // 코스피 정보가 userStock과 직접적인 테이블 연결이 없지만 같이 매칭될 수 있는 부분.
+//        List<KospiStockEntity> stocks = kospiStockRepository.findByStockName(stockName);
+//        if (stocks.isEmpty()) {
+//            throw new RuntimeException("주식이 존재하지 않습니다: " + stockName);
+//        }
+//
+//        // stocks 의 0 번째 인 이유는 기본키의 stockName 부분을 가져왔기 때문에 중복되지않는 하나의 값만 나옴 = 0번째가 내가 원하는 주식 값.
+//        KospiStockEntity stock = stocks.get(0); // 첫 번째 주식 선택
+//        String a = stock.getPrice().replaceAll("[^0-9]", "");
+////        double price = Double.parseDouble(stock.getPrice()); // 가격 가져오기
+//        double price = Double.parseDouble(a);
+//        double totalPrice = price * quantity;
+//
+//        if (user.getCoin() < totalPrice) {
+//            throw new RuntimeException("잔액 부족");
+//        }
+//
+//        user.setCoin(user.getCoin() - (int) totalPrice);
+//        userRepository.save(user);
+//
+//        // 사용자 보유 주식 업데이트
+//        UserStockEntity userStock = userStockRepository.findByStockNameAndUser(stockName, user);
+//        if (userStock == null) {
+//            userStock = new UserStockEntity();
+//            userStock.setUser(user);
+//            userStock.setStockName(stockName);
+//            userStock.setQuantity(quantity);
+//            userStock.setPricePerShare(price); // 주식 당 가격 설정
+//            userStock.setAveragePrice(price); // 평균 가격 설정 (처음 구매 시)
+//            userStock.setStockType("kospi");
+//        } else {
+//            // 평균 가격 업데이트
+//            double totalCost = (userStock.getAveragePrice() * userStock.getQuantity()) + (price * quantity);
+//            userStock.setQuantity(userStock.getQuantity() + quantity);
+//            userStock.setAveragePrice(totalCost / userStock.getQuantity()); // 새로운 평균 가격 계산
+//        }
+//        userStockRepository.save(userStock);
+//    }
 
     public void sellStock(String username, String stockName, int quantity) {
         UserEntity user = userRepository.findByUsername(username);

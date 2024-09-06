@@ -5,6 +5,8 @@ public class BuyRequest {
     private String stockName;
     private int quantity;
 
+    private String stockType;
+
     public BuyRequest() {}
 
     public String getUsername() {
@@ -29,5 +31,13 @@ public class BuyRequest {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getStockType() {
+        return stockType;
+    }
+
+    public void setStockType(String stockType) {
+        this.stockType = stockType;
     }
 }
