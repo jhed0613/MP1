@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class KosdakStockDto {
+public class KosdaqStockDto {
     private String no;
     private String stockName;
     private String price;                // 현재가

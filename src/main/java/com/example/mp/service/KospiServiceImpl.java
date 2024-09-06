@@ -1,11 +1,8 @@
 package com.example.mp.service;
 
 import com.example.mp.common.StockUtils;
-import com.example.mp.dto.KosdakStockDto;
 import com.example.mp.dto.KospiStockDto;
-import com.example.mp.entity.KosdakStockEntity;
 import com.example.mp.entity.KospiStockEntity;
-import com.example.mp.repository.KosdakStockRepository;
 import com.example.mp.repository.KospiStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,14 +1,11 @@
 package com.example.mp.service;
 
 import com.example.mp.common.StockUtils;
-import com.example.mp.dto.KosdakStockDto;
-import com.example.mp.dto.KospiStockDto;
-import com.example.mp.entity.KosdakStockEntity;
-import com.example.mp.entity.KospiStockEntity;
-import com.example.mp.repository.KosdakStockRepository;
+import com.example.mp.dto.KosdaqStockDto;
+import com.example.mp.entity.KosdaqStockEntity;
+import com.example.mp.repository.KosdaqStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,62 +14,54 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class KosdakServiceImpl implements KosdakService{
+public class KosdaqServiceImpl implements KosdaqService {
     @Autowired
     private StockUtils stockUtils;
     @Autowired
-    private KosdakStockRepository kosdakStockRepository;
+    private KosdaqStockRepository kosdaqStockRepository;
 
     @Override
-    public List<KosdakStockDto> getKosDakStockList() {
-        return stockUtils.getKosdakStockList(
+    public List<KosdaqStockDto> getKosDaqStockList() {
+        return stockUtils.getKosdaqStockList(
                 "https://finance.naver.com/sise/sise_market_sum.naver?sosok=1");
     }
 
 //    @Override
-//    public ResponseEntity<KosdakStockDto> findByStockName(String stockName) {
-//        return kosdakStockRepository.findByStockName(stockName);
+//    public ResponseEntity<KosdaqStockDto> findByStockName(String stockName) {
+//        return kosdaqStockRepository.findByStockName(stockName);
 //    }
 
 //    @Override
-//    public List<KosdakStockDto> findByStockName(String stockName) {
-//        return kosdakStockRepository.findByStockName(stockName);
+//    public List<KosdaqStockDto> findByStockName(String stockName) {
+//        return kosdaqStockRepository.findByStockName(stockName);
 //    }
 
     @Scheduled(fixedRate = 60000) // 1분마다 실행
-    public void updateKosdakData() {
+    // 정한 시간에 실행 , 사용하려면 메인 클래스에 @EnableScheduling 추가해야함.
+    public void updateKosdaqData() {
         try {
-            List<KosdakStockDto> kosDakStockList = getKosDakStockList();
-            List<KosdakStockEntity> kosDakEntities = kosDakStockList.stream()
+            List<KosdaqStockDto> kosDaqStockList = getKosDaqStockList();
+            List<KosdaqStockEntity> kosDaqEntities = kosDaqStockList.stream()
                     .map(this::dtoToEntity)
                     .collect(Collectors.toList());
-            kosdakStockRepository.saveAll(kosDakEntities);
+            kosdaqStockRepository.saveAll(kosDaqEntities);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //    @Scheduled(cron = "0 0 0 * * *") // 정한 시간에 실행 , 사용하려면 메인 클래스에 @EnableScheduling 추가해야함.
-//    public void updateKosdakStockData() {
-//        List<KosdakStockDto> kosDakStockList = this.getKosDakStockList();
-//        List<KosdakStockEntity> kosDakEntities = kosDakStockList.stream()
-//                .map(this::dtoToEntity)
-//                .collect(Collectors.toList());
-//        kosdakStockRepository.saveAll(kosDakEntities);
-//    }
-
     @Override
-    public void saveStocks(List<KosdakStockDto> stockDtoList) {
-        List<KosdakStockEntity> entities = stockDtoList.stream()
+    public void saveStocks(List<KosdaqStockDto> stockDtoList) {
+        List<KosdaqStockEntity> entities = stockDtoList.stream()
                 .map(this::dtoToEntity)
                 .collect(Collectors.toList());
-        kosdakStockRepository.saveAll(entities);
+        kosdaqStockRepository.saveAll(entities);
     }
 
 
     @Override
-    public KosdakStockEntity dtoToEntity(KosdakStockDto dto) {
-        KosdakStockEntity entity = new KosdakStockEntity();
+    public KosdaqStockEntity dtoToEntity(KosdaqStockDto dto) {
+        KosdaqStockEntity entity = new KosdaqStockEntity();
         entity.setStockName(dto.getStockName());
         entity.setNo(dto.getNo());
         entity.setPrice(dto.getPrice());
@@ -90,8 +79,8 @@ public class KosdakServiceImpl implements KosdakService{
     }
 
     @Override
-    public KosdakStockDto EntityToDto(KosdakStockEntity entity) {
-        KosdakStockDto dto = new KosdakStockDto();
+    public KosdaqStockDto EntityToDto(KosdaqStockEntity entity) {
+        KosdaqStockDto dto = new KosdaqStockDto();
         dto.setStockName(entity.getStockName());
         dto.setNo(entity.getNo());
         dto.setPrice(entity.getPrice());

@@ -27,11 +27,11 @@ public class TradingService {
 
     public void buyStock(String username, String stockName, int quantity) {
         UserEntity user = userRepository.findByUsername(username);
-//                .orElseThrow(() -> new RuntimeException(" 누구? "));
+
         if (user == null) {
             throw new RuntimeException("존재하지 않는 사용자입니다.");
         }
-//        KospiStockEntity stock = kospiStockRepository.findById(stockName).orElseThrow(() -> new RuntimeException(" 무엇? "));
+
         // 코스피 정보가 userStock과 직접적인 테이블 연결이 없지만 같이 매칭될 수 있는 부분.
         List<KospiStockEntity> stocks = kospiStockRepository.findByStockName(stockName);
         if (stocks.isEmpty()) {
@@ -56,7 +56,7 @@ public class TradingService {
         UserStockEntity userStock = userStockRepository.findByStockNameAndUser(stockName, user);
         if (userStock == null) {
             userStock = new UserStockEntity();
-            userStock.setUser(user); // TODO. 데이터베이스에 구매한 주식 정보가 저장이 안되었는데 여기서 값이 안들어옴 밑에는 잘 들어옴.
+            userStock.setUser(user);
             userStock.setStockName(stockName);
             userStock.setQuantity(quantity);
             userStock.setPricePerShare(price); // 주식 당 가격 설정

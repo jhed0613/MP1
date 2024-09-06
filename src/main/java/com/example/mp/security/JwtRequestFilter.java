@@ -22,8 +22,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Autowired
-    private UserRepository repository;
+//    @Autowired
+//    private UserRepository repository;
+    private final UserRepository repository;
+
+    public JwtRequestFilter (UserRepository userRepository){
+        this.repository = userRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

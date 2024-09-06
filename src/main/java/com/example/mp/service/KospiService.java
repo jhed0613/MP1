@@ -1,8 +1,6 @@
 package com.example.mp.service;
 
-import com.example.mp.dto.KosdakStockDto;
 import com.example.mp.dto.KospiStockDto;
-import com.example.mp.entity.KosdakStockEntity;
 import com.example.mp.entity.KospiStockEntity;
 
 import java.util.List;

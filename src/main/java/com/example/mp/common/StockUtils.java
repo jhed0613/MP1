@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.mp.dto.KosdakStockDto;
+import com.example.mp.dto.KosdaqStockDto;
 import com.example.mp.dto.KospiStockDto;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -62,34 +62,34 @@ public class StockUtils {
         return kospiStockDto;
     }
 
-    // ------------------------ Kosdak -------------------------
+    // ------------------------ Kosdaq -------------------------
 
-    public List<KosdakStockDto> getKosdakStockList(String url) {
+    public List<KosdaqStockDto> getKosdaqStockList(String url) {
         final String stockList = url;
         Connection conn = Jsoup.connect(stockList);
         try {
             Document document = conn.get();
-            return getKosdakStockList(document);
+            return getKosdaqStockList(document);
         } catch (IOException ignored) {
         }
         return null;
     }
 
-    public List<KosdakStockDto> getKosdakStockList(Document document) {
-        Elements kosDakTable = document.select("table.type_2 tbody tr");
-        List<KosdakStockDto> list = new ArrayList<>();
-        for (Element element : kosDakTable) {
+    public List<KosdaqStockDto> getKosdaqStockList(Document document) {
+        Elements kosDaqTable = document.select("table.type_2 tbody tr");
+        List<KosdaqStockDto> list = new ArrayList<>();
+        for (Element element : kosDaqTable) {
             if (element.attr("onmouseover").isEmpty()) {
                 continue;
             }
-            list.add(createkosdakStockDto(element.select("td")));
+            list.add(createkosdaqStockDto(element.select("td")));
         }
         return list;
     }
 
-    public KosdakStockDto createkosdakStockDto(Elements td) {
-        KosdakStockDto kosdakStockDto = KosdakStockDto.builder().build();
-        Class<?> clazz = kosdakStockDto.getClass();
+    public KosdaqStockDto createkosdaqStockDto(Elements td) {
+        KosdaqStockDto kosdaqStockDto = KosdaqStockDto.builder().build();
+        Class<?> clazz = kosdaqStockDto.getClass();
         Field[] fields = clazz.getDeclaredFields();
 
         for (int i = 0; i < td.size() && i < fields.length;  i++) {
@@ -102,11 +102,11 @@ public class StockUtils {
             text = td.get(i).text();
             fields[i].setAccessible(true);
             try {
-                fields[i].set(kosdakStockDto, text);
+                fields[i].set(kosdaqStockDto, text);
             } catch (Exception ignored) {
             }
         }
 
-        return kosdakStockDto;
+        return kosdaqStockDto;
     }
 }

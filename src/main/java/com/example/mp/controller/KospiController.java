@@ -1,32 +1,21 @@
 package com.example.mp.controller;
 
-import com.example.mp.dto.KosdakStockDto;
 import com.example.mp.dto.KospiStockDto;
-import com.example.mp.entity.KosdakStockEntity;
 import com.example.mp.entity.KospiStockEntity;
 import com.example.mp.entity.UserEntity;
 import com.example.mp.repository.KospiStockRepository;
-import com.example.mp.service.KosdakService;
 import com.example.mp.service.KospiService;
 import com.example.mp.service.UserService;
-import com.example.mp.service.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,43 +36,43 @@ public class KospiController {
         return kospiService.getKosPiStockList();
     }
 
-    @GetMapping("/kospi/list")
-    public String listKospiStocks(Model model) {
-        List<KospiStockEntity> stocks = kospiStockRepository.findAll();
-        if (stocks.isEmpty()) {
-            // 데이터가 없으면 크롤링하여 데이터베이스에 저장
-            kospiService.updateKospiData(); // 크롤링 및 저장 메서드 호출
-            stocks = kospiStockRepository.findAll(); // 다시 데이터 조회
-        }
-        model.addAttribute("stocks", stocks);
-        return "kospi/list";
-    }
+//    @GetMapping("/kospi/list")
+//    public String listKospiStocks(Model model) {
+//        List<KospiStockEntity> stocks = kospiStockRepository.findAll();
+//        if (stocks.isEmpty()) {
+//            // 데이터가 없으면 크롤링하여 데이터베이스에 저장
+//            kospiService.updateKospiData(); // 크롤링 및 저장 메서드 호출
+//            stocks = kospiStockRepository.findAll(); // 다시 데이터 조회
+//        }
+//        model.addAttribute("stocks", stocks);
+//        return "kospi/list";
+//    }
 
 
-    @GetMapping("/kospi/data")
-    public String kospiStockData() {
-        try {
-            // 크롤링한 데이터 가져오기
-            List<KospiStockDto> kosPiStockList = kospiService.getKosPiStockList();
-
-            // 엔티티로 변환
-            List<KospiStockEntity> kosPiEntities = kosPiStockList.stream()
-                    .map(kospiService::dtoToEntity)
-                    .collect(Collectors.toList());
-
-            // 데이터베이스에 저장 (업데이트와 삽입을 동시에 처리)
-            kospiStockRepository.saveAll(kosPiEntities);
-
-            UserEntity user = userService.getCurrentUser(); // 현재 사용자 정보 가져오기
-
-        } catch (Exception e) {
-            // 예외 처리
-            e.printStackTrace();
-        }
-
-        // 리다이렉트
-        return "redirect:/kospi/list";
-    }
+//    @GetMapping("/kospi/data")
+//    public String kospiStockData() {
+//        try {
+//            // 크롤링한 데이터 가져오기
+//            List<KospiStockDto> kosPiStockList = kospiService.getKosPiStockList();
+//
+//            // 엔티티로 변환
+//            List<KospiStockEntity> kosPiEntities = kosPiStockList.stream()
+//                    .map(kospiService::dtoToEntity)
+//                    .collect(Collectors.toList());
+//
+//            // 데이터베이스에 저장 (업데이트와 삽입을 동시에 처리)
+//            kospiStockRepository.saveAll(kosPiEntities);
+//
+//            UserEntity user = userService.getCurrentUser(); // 현재 사용자 정보 가져오기
+//
+//        } catch (Exception e) {
+//            // 예외 처리
+//            e.printStackTrace();
+//        }
+//
+//        // 리다이렉트
+//        return "redirect:/kospi/list";
+//    }
 
 //    @GetMapping("/search/kospi")
 //    public String searchStocks(@RequestParam(name = "stockName", required = false) String stockName, Model model) {
