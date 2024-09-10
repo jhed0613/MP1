@@ -1,4 +1,4 @@
-package com.example.mp.service;
+package com.example.mp.service.impl;
 
 import com.example.mp.dto.CustomUserDetail;
 import com.example.mp.dto.JoinDto;
@@ -6,6 +6,7 @@ import com.example.mp.dto.KospiStockDto;
 import com.example.mp.dto.UserDto;
 import com.example.mp.entity.UserEntity;
 import com.example.mp.repository.UserRepository;
+import com.example.mp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

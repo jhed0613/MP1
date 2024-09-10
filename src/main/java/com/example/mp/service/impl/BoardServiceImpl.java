@@ -1,4 +1,4 @@
-package com.example.mp.service;
+package com.example.mp.service.impl;
 
 import com.example.mp.dto.BoardDto;
 import com.example.mp.entity.BoardEntity;
@@ -8,6 +8,7 @@ import com.example.mp.repository.BoardFileRepository;
 import com.example.mp.repository.BoardRepository;
 import com.example.mp.repository.UserRepository;
 import com.example.mp.common.FileUtils;
+import com.example.mp.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

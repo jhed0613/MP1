@@ -4,8 +4,8 @@
 
 # Log file
 *.log
-D:
-*.gz
+#D:
+#*.gz
 
 # BlueJ files
 *.ctxt

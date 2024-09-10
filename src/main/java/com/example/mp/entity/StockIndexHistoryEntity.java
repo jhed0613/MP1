@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -34,13 +33,13 @@ public class StockIndexHistoryEntity {
     @Column(name="low_value")
     private double lowVal;
 
-    @Column(name="change")
+    @Column(name = "`change`")
     private double change;
 
     @Column(name="created_at")
     private LocalDateTime createTime = LocalDateTime.now();
-
-    @ManyToOne
-    @JoinColumn(name = "stock_id", referencedColumnName = "stock_id")
-    private StockIndexEntity stockIndex;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "stock_id", referencedColumnName = "stock_id")
+//    private StockIndexEntity stockIndex;
 }

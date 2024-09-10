@@ -1,9 +1,10 @@
-package com.example.mp.service;
+package com.example.mp.service.impl;
 
 import com.example.mp.common.StockUtils;
 import com.example.mp.dto.KospiStockDto;
 import com.example.mp.entity.KospiStockEntity;
 import com.example.mp.repository.KospiStockRepository;
+import com.example.mp.service.KospiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

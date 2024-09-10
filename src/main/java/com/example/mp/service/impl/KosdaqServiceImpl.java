@@ -1,9 +1,10 @@
-package com.example.mp.service;
+package com.example.mp.service.impl;
 
 import com.example.mp.common.StockUtils;
 import com.example.mp.dto.KosdaqStockDto;
 import com.example.mp.entity.KosdaqStockEntity;
 import com.example.mp.repository.KosdaqStockRepository;
+import com.example.mp.service.KosdaqService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

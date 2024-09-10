@@ -1,8 +1,9 @@
-package com.example.mp.service;
+package com.example.mp.service.impl;
 
 import com.example.mp.dto.JoinDto;
 import com.example.mp.entity.UserEntity;
 import com.example.mp.repository.UserRepository;
+import com.example.mp.service.JoinService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
