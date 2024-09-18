@@ -5,6 +5,7 @@ import com.example.mp.dto.CustomUserDetail;
 import com.example.mp.dto.KospiStockDto;
 import com.example.mp.entity.BoardEntity;
 import com.example.mp.entity.BoardFileEntity;
+import com.example.mp.mapper.BoardMapper;
 import com.example.mp.service.BoardService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,19 +48,12 @@ public class BoardController {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    private final BoardMapper boardMapper;
 
-//    @GetMapping("/board")
-//    @Tag(name="게시판 리스트")
-//    @Operation(summary = "게시판 리스트 출력", description = "게시판 리스트를 보여줌")
-//    public ModelAndView openBoardList(HttpServletRequest request) throws Exception {
-//        ModelAndView mv = new ModelAndView("/jpaBoardList");
-//
-//        // DTO -> Entity 로 변경
-//        List<BoardEntity> list = boardService.selectBoardList();
-//        mv.addObject("jpaControllerList", list);
-//
-//        return mv;
-//    }
+    public BoardController(BoardMapper boardMapper){
+        this.boardMapper = boardMapper;
+    }
+
 
     // TODO. 원래 ModelAndView 로 리턴했는데 이러면 JSON 형태로 변환되지 않아 REST 방식에 어긋나 프론트에서 오류가 났음 -> 리스트로 리턴하게 바꿈.
     @GetMapping("/board")
@@ -78,38 +72,14 @@ public class BoardController {
         return "/jpaBoardWrite";
     }
 
-    // 게시판 등록
-//    @PostMapping("/board/write")
-//    @Tag(name="게시글 생성")
-//    @Operation(summary = "게시글 생성", description = "게시글을 생성함")
-//    public String insertBoard(BoardEntity BoardEntity, MultipartHttpServletRequest request, String loggedInUserId) throws Exception {
-//        boardService.insertBoard(BoardEntity, request);
-//        return "redirect:/jpa/board";
-//    }
-
     @PostMapping("/board/write")
     @Tag(name = "게시글 생성")
     @Operation(summary = "게시글 생성", description = "게시글을 생성함")
-    public String insertBoard(BoardEntity boardEntity, MultipartHttpServletRequest request) throws Exception {
+    public ResponseEntity<Void> insertBoard(BoardEntity boardEntity, MultipartHttpServletRequest request) throws Exception {
         boardService.insertBoard(boardEntity, request);
-        return "redirect:/jpa/board";
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
-
-    // 게시판 상세 조회
-//    @GetMapping("/board/{boardIdx}")
-//    @Tag(name="게시글 상세 페이지")
-//    @Operation(summary = "게시글 상세 페이지", description = "게시글 상세 페이지를 보여줌")
-//    @Parameter(name = "boardIdx", description = "게시글 고유 번호", required = true)
-//    public ModelAndView openBoardDetail(@PathVariable("boardIdx") int boardIdx) throws Exception {
-//        ModelAndView mv = new ModelAndView("/jpaBoardDetail");
-//
-//        BoardEntity boardEntity = boardService.selectBoardDetail(boardIdx);
-//        mv.addObject("board", boardEntity);
-//
-//        return mv;
-//    }
     @GetMapping("/board/{boardIdx}")
     @Tag(name="게시글 상세 페이지")
     @Operation(summary = "게시글 상세 페이지", description = "게시글 상세 페이지를 보여줍니다.")
@@ -120,7 +90,7 @@ public class BoardController {
             return ResponseEntity.notFound().build();
         }
 
-        BoardDto boardDto = boardService.entityToDto(boardEntity); // Entity를 DTO로 변환
+        BoardDto boardDto = boardMapper.toDto(boardEntity); // Entity를 DTO로 변환
         return ResponseEntity.ok(boardDto);
     }
 
@@ -138,18 +108,8 @@ public class BoardController {
                 .body(resource); // 파일 반환
     }
 
-//    // 게시판 수정
-//    @PutMapping("/board/{boardIdx}")
-//    @Tag(name="게시글 수정")
-//    @Operation(summary = "게시글 수정", description = "게시글을 수정함")
-//    @Parameter(name = "boardIdx", description = "수정할 게시글 고유 번호", required = true)
-//    public String updateBoard(@PathVariable("boardIdx") int boardIdx, BoardEntity BoardEntity) throws Exception {
-//        boardService.updateBoard(BoardEntity);
-//        return "redirect:/jpa/board";
-//    }
-
     // 게시판 수정
-    @PutMapping("/board/{boardIdx}")
+    @PutMapping("/board/update/{boardIdx}")
     @Tag(name="게시글 수정")
     @Operation(summary = "게시글 수정", description = "게시글을 수정함")
     public ResponseEntity<Void> updateBoard(
@@ -165,27 +125,13 @@ public class BoardController {
         }
     }
 
-    // 게시판 삭제
-//    @DeleteMapping("/board/{boardIdx}")
 //    @Tag(name="게시글 삭제")
 //    @Operation(summary = "게시글 삭제", description = "게시글을 삭제함")
 //    @Parameter(name = "boardIdx", description = "삭제할 게시글 고유 번호", required = true)
-//    public String deleteBoard(@PathVariable("boardIdx") int boardIdx) throws Exception {
-//        boardService.deleteBoard(boardIdx);
-//        return "redirect:/jpa/board";
-//    }
     @DeleteMapping("/board/{boardIdx}")
-    @Tag(name="게시글 삭제")
-    @Operation(summary = "게시글 삭제", description = "게시글을 삭제함")
-    @Parameter(name = "boardIdx", description = "삭제할 게시글 고유 번호", required = true)
-    public ResponseEntity<Void> deleteBoard(@PathVariable("boardIdx") int boardIdx) {
-        try {
-            boardService.deleteBoard(boardIdx);
-            return ResponseEntity.noContent().build(); // 성공적으로 삭제되었음을 나타냅니다.
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 서버 오류 발생 시
-        }
+    public ResponseEntity<Void> deleteBoard(@PathVariable("boardIdx") int boardIdx, HttpServletRequest request) {
+        boardService.deleteBoard(boardIdx, request);
+        return ResponseEntity.noContent().build(); // 성공적으로 삭제되었음을 나타냅니다.
     }
     // 첨부파일 다운로드
     @GetMapping("/board/file/{boardIdx}/{idx}")

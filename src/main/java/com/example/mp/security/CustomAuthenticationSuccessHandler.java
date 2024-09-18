@@ -37,6 +37,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Autowired
     private JwtUtils jwtUtils;
 
+
+    // 이 부분 때문에 SecurityContextHolder.getContext().getAuthentication().getName() 로 현재 로그인된 사용자 정보 받아올 수 있음 ( 캐시되어있어 효율 굳 )
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {

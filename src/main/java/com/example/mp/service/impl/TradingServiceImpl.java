@@ -1,5 +1,6 @@
 package com.example.mp.service.impl;
 
+import com.example.mp.dto.UserStockDto;
 import com.example.mp.entity.KosdaqStockEntity;
 import com.example.mp.entity.KospiStockEntity;
 import com.example.mp.entity.UserEntity;
@@ -30,6 +31,8 @@ public class TradingServiceImpl implements TradingService {
 
     @Autowired
     private UserStockRepository userStockRepository;
+
+    @Override
     public void buyStock(String username, String stockName, int quantity, String stockType) {
         UserEntity user = userRepository.findByUsername(username);
 
@@ -125,6 +128,8 @@ public class TradingServiceImpl implements TradingService {
 //            userStockRepository.save(userStock);
 //        }
 //    }
+
+    @Override
     public void sellStock(String username, String stockName, int quantity, String stockType) {
         UserEntity user = userRepository.findByUsername(username);
 
@@ -178,9 +183,13 @@ public class TradingServiceImpl implements TradingService {
         if (userStock.getQuantity() - quantity > 0) {
             double newAveragePrice = totalCostAfterSale / (userStock.getQuantity() - quantity);
             userStock.setAveragePrice(newAveragePrice);
+            userStock.setTotalPrice(totalCostAfterSale);
+            userStock.setQuantity(userStock.getQuantity() - quantity);
         }
         else {
             userStockRepository.delete(userStock);
         }
     }
+
+
 }

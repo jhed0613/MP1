@@ -18,7 +18,8 @@ public class BoardDto {
     private int hitCnt;
     private String createTime;
     private String updateTime;
-    private Long userId;  // User의 ID만 포함
+    private String createdUsername;
+//    private Long userId;  // User의 ID만 포함
     private List<BoardFileDto> fileInfoList;
 
 }
