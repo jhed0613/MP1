@@ -5,6 +5,7 @@ import com.example.mp.entity.KosdaqStockEntity;
 import com.example.mp.entity.KospiStockEntity;
 import com.example.mp.entity.UserEntity;
 import com.example.mp.entity.UserStockEntity;
+import com.example.mp.mapper.UserStockMapper;
 import com.example.mp.repository.KosdaqStockRepository;
 import com.example.mp.repository.KospiStockRepository;
 import com.example.mp.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional // 메소드 전체를 하나의 트랜잭션으로 관리 트랜잭션이 끝나면 모든 변경 사항이 커밋, 예외 발생 시 롤백.
@@ -32,10 +34,16 @@ public class TradingServiceImpl implements TradingService {
     @Autowired
     private UserStockRepository userStockRepository;
 
+    @Autowired
+    private UserStockMapper userStockMapper;
+
     @Override
     public void buyStock(String username, String stockName, int quantity, String stockType) {
         UserEntity user = userRepository.findByUsername(username);
 
+        if (quantity == 0){
+            throw new NumberFormatException("수량을 입력하세요.");
+        }
         if (user == null) {
             throw new RuntimeException("존재하지 않는 사용자입니다.");
         }
@@ -95,39 +103,6 @@ public class TradingServiceImpl implements TradingService {
     private double extractPrice(String priceString) {
         return Double.parseDouble(priceString.replaceAll("[^0-9]", ""));
     }
-
-
-//    public void sellStock(String username, String stockName, int quantity) {
-//        UserEntity user = userRepository.findByUsername(username);
-////                .orElseThrow(() -> new RuntimeException(" 누구? "));
-//        if (user == null) {
-//            throw new RuntimeException("존재하지 않는 사용자입니다.");
-//        }
-//        UserStockEntity userStock = userStockRepository.findByStockNameAndUser(stockName, user);
-//
-//        if (userStock == null || userStock.getQuantity() < quantity) {
-//            throw new RuntimeException(" 바이 ");
-//        }
-//
-//        KospiStockEntity stock = kospiStockRepository.findById(stockName).orElseThrow(() -> new RuntimeException("주식 정보 오류"));
-////        double price = Double.parseDouble(stock.getPrice());
-////        double totalPrice = price * quantity;
-//
-//        String a = stock.getPrice().replaceAll("[^0-9]", "");
-////        double price = Double.parseDouble(stock.getPrice()); // 가격 가져오기
-//        double price = Double.parseDouble(a);
-//        double totalPrice = price * quantity;
-//
-//        user.setCoin(user.getCoin() + (int) totalPrice);
-//        userRepository.save(user);
-//
-//        userStock.setQuantity(userStock.getQuantity() - quantity);
-//        if (userStock.getQuantity() == 0) {
-//            userStockRepository.delete(userStock);
-//        } else {
-//            userStockRepository.save(userStock);
-//        }
-//    }
 
     @Override
     public void sellStock(String username, String stockName, int quantity, String stockType) {
@@ -190,6 +165,29 @@ public class TradingServiceImpl implements TradingService {
             userStockRepository.delete(userStock);
         }
     }
+    @Override
+    public List<UserStockDto> getUserStockList(long userId) {
+        List<UserStockEntity> userStockEntities = userStockRepository.findByUserId(userId);
 
+        return userStockEntities.stream().map(userStock -> {
+            UserStockDto userStockDto = userStockMapper.toDto(userStock);
 
+            double realTimePrice = 0;
+            if (userStock.getStockType().equalsIgnoreCase("kospi")) {
+                KospiStockEntity stock = kospiStockRepository.findByStockName(userStock.getStockName()).get(0);
+                realTimePrice = extractPrice(stock.getPrice());
+            } else if (userStock.getStockType().equalsIgnoreCase("kosdaq")) {
+                KosdaqStockEntity stock = kosdaqStockRepository.findByStockName(userStock.getStockName()).get(0);
+                realTimePrice = extractPrice(stock.getPrice());
+            }
+
+            double totalCurrentValue = userStock.getQuantity() * realTimePrice;
+            double profit = totalCurrentValue - userStock.getTotalPrice(); // 순이익 계산
+
+            userStockDto.setTotalCurrentValue(totalCurrentValue);
+            userStockDto.setProfit(profit);
+
+            return userStockDto;
+        }).collect(Collectors.toList());
+    }
 }

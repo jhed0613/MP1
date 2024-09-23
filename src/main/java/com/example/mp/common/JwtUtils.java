@@ -35,6 +35,7 @@ public class JwtUtils {
         String jwtToken = Jwts.builder()
                 .claim("name", userEntity.getUsername())
                 .claim("email", userEntity.getEmail())
+                .claim("userId", userEntity.getId())
 //                .claim("coin",userEntity.getCoin())
 //                .claim("role",userEntity.getRole())
                 // .setSubject(userEntity.getUsername())
