@@ -29,7 +29,7 @@ public class JwtUtils {
         this.expirationTime = Long.parseLong(env.getProperty("token.expiration-time"));
     }
 
-    // TODO. jwt.io 에서 토큰 찍어보면 여기서 설정한 기준대로 출력됨.
+    // jwt.io 에서 토큰 찍어보면 여기서 설정한 기준대로 출력됨.
     public String generateToken(UserEntity userEntity) {
         Instant now = Instant.now();
         String jwtToken = Jwts.builder()
