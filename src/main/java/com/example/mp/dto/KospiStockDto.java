@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class KorStockDto {
-
+public class KospiStockDto {
     private String no;
     private String stockName;
     private String price;                // 현재가
@@ -23,5 +22,5 @@ public class KorStockDto {
     private String turnover;             // 거래량
     private String per;                  // per
     private String roe;                  // roe
-    private String discussionRoomUrl;    // 토론방 url
+//    private String discussionRoomUrl;    // 토론방 url
 }

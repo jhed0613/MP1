@@ -6,7 +6,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.mp.dto.KorStockDto;
+import com.example.mp.dto.KosdaqStockDto;
+import com.example.mp.dto.KospiStockDto;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,61 +18,95 @@ import org.springframework.stereotype.Component;
 @Component
 public class StockUtils {
 
-    public List<KorStockDto> getKorStockList(String url) {
+    public List<KospiStockDto> getKospiStockList(String url) {
         final String stockList = url;
         Connection conn = Jsoup.connect(stockList);
         try {
             Document document = conn.get();
-            return getKorStockList(document);
+            return getKopiStockList(document);
         } catch (IOException ignored) {
         }
         return null;
     }
 
-    public List<KorStockDto> getKorStockList(Document document) {
+    public List<KospiStockDto> getKopiStockList(Document document) {
         Elements kosPiTable = document.select("table.type_2 tbody tr");
-        List<KorStockDto> list = new ArrayList<>();
+        List<KospiStockDto> list = new ArrayList<>();
         for (Element element : kosPiTable) {
             if (element.attr("onmouseover").isEmpty()) {
                 continue;
             }
-            list.add(createkorStockDto(element.select("td")));
+            list.add(createkospiStockDto(element.select("td")));
         }
         return list;
     }
 
-    public KorStockDto createkorStockDto(Elements td) {
-        KorStockDto korStockDto = KorStockDto.builder().build();
-        Class<?> clazz = korStockDto.getClass();
+    public KospiStockDto createkospiStockDto(Elements td) {
+        KospiStockDto kospiStockDto = KospiStockDto.builder().build();
+        Class<?> clazz = kospiStockDto.getClass();
         Field[] fields = clazz.getDeclaredFields();
 
-        for (int i = 0; i < td.size(); i++) {
+        for (int i = 0; i < td.size() && i < fields.length;  i++) {
             String text;
-            if(td.get(i).select(".center a").attr("href").isEmpty()){
+            if (td.get(i).select(".center a").attr("href").isEmpty()) {
                 text = td.get(i).text();
-            }else{
+            } else {
                 text = "https://finance.naver.com" + td.get(i).select(".center a").attr("href");
             }
             fields[i].setAccessible(true);
-            try{
-                fields[i].set(korStockDto,text);
-            }catch (Exception ignored){
+            try {
+                fields[i].set(kospiStockDto, text);
+            } catch (Exception ignored) {
             }
         }
-        return korStockDto;
+        return kospiStockDto;
+    }
 
+    // ------------------------ Kosdaq -------------------------
 
-// URL 뺴고 받아오기
-//        for (int i = 0; i < td.size(); i++) {
-//            String text;
-//            text = td.get(i).text();
-//
-//            fields[i].setAccessible(true);
-//            try{
-//                fields[i].set(korStockDto,text);
-//            }catch (Exception ignored){
+    public List<KosdaqStockDto> getKosdaqStockList(String url) {
+        final String stockList = url;
+        Connection conn = Jsoup.connect(stockList);
+        try {
+            Document document = conn.get();
+            return getKosdaqStockList(document);
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
+    public List<KosdaqStockDto> getKosdaqStockList(Document document) {
+        Elements kosDaqTable = document.select("table.type_2 tbody tr");
+        List<KosdaqStockDto> list = new ArrayList<>();
+        for (Element element : kosDaqTable) {
+            if (element.attr("onmouseover").isEmpty()) {
+                continue;
+            }
+            list.add(createkosdaqStockDto(element.select("td")));
+        }
+        return list;
+    }
+
+    public KosdaqStockDto createkosdaqStockDto(Elements td) {
+        KosdaqStockDto kosdaqStockDto = KosdaqStockDto.builder().build();
+        Class<?> clazz = kosdaqStockDto.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+
+        for (int i = 0; i < td.size() && i < fields.length;  i++) {
+            String text;
+//            if (td.get(i).select(".center a").attr("href").isEmpty()) {
+//                text = td.get(i).text();
+//            } else {
+//                text = "https://finance.naver.com" + td.get(i).select(".center a").attr("href");
 //            }
-//        }
-//        return korStockDto;
+            text = td.get(i).text();
+            fields[i].setAccessible(true);
+            try {
+                fields[i].set(kosdaqStockDto, text);
+            } catch (Exception ignored) {
+            }
+        }
+
+        return kosdaqStockDto;
     }
 }

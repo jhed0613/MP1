@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인</title>
+    <link rel="stylesheet" href="@{/css/login.css}" >
+</head>
+<body>
+<div class="e1_2">
+    <header class="header">
+        <nav class="navigation">
+            <a th:href="@{/home}">Home</a>
+        </nav>
+        <div class="auth-buttons">
+            <a th:href="@{/login}" class="button">Sign In</a>
+            <a th:href="@{/join}" class="button">Sign Up</a>
+        </div>
+    </header>
+    <div class="main-content">
+        <h1 class="title">Sign In</h1>
+        <form method="POST" action="/loginProc">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <label for="username">Username</label>
+            <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="ID를 입력하세요."
+                    required
+            />
+
+            <label for="password">Password</label>
+            <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="패스워드를 입력하세요."
+                    required
+            />
+
+            <input type="submit" value="로그인" />
+        </form>
+        <p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p> <!-- 에러 메시지 표시 -->
+    </div>
+</div>
+</body>
+</html>

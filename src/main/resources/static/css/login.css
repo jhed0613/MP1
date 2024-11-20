@@ -1,0 +1,165 @@
+/* 전체 컨테이너 */
+.e1_2 {
+    background-color: rgba(255, 255, 255, 1);
+    width: 100%;
+    max-width: 1280px; /* 최대 너비를 1280px로 제한 */
+    margin: 0 auto; /* 화면 중앙 정렬 */
+    position: relative; /* 자식 요소의 절대 위치 설정을 위해 */
+    padding: 20px; /* 여백 추가 */
+    box-sizing: border-box; /* 패딩과 테두리를 포함하여 전체 너비를 계산 */
+}
+
+/* 헤더 */
+.header {
+    width: 100%;
+    height: 70px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* 아래 여백 추가 */
+}
+
+/* 메뉴 아이콘 */
+.menu-icon {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 24px;
+}
+
+.menu-icon span {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 2px;
+    height: 4px;
+    width: 30px;
+}
+
+/* 네비게이션 링크 */
+.navigation {
+    display: flex;
+    gap: 20px;
+}
+
+.navigation a {
+    color: rgba(0, 0, 0, 1);
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+/* 인증 버튼 */
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    background-color: rgba(44, 44, 44, 1);
+    color: rgba(245, 245, 245, 1);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* 로그인 페이지 스타일 */
+.main-content {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.title {
+    color: rgba(0, 0, 0, 1);
+    font-family: Inter, sans-serif;
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+/* 로그인 폼 */
+.login-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: rgba(245, 245, 245, 1);
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 1);
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.login-form button {
+    background-color: rgba(44, 44, 44, 1);
+    color: rgba(245, 245, 245, 1);
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 푸터 */
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #e7e7e7;
+    box-sizing: border-box; /* 패딩과 테두리를 포함하여 전체 너비를 계산 */
+    font-family: Inter, sans-serif;
+    color: #555;
+}
+
+/* 푸터 텍스트 */
+footer p {
+    margin: 0;
+    color: #555;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+    .e1_2 {
+        padding: 10px;
+    }
+
+    .navigation a {
+        font-size: 16px;
+    }
+
+    .button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .title {
+        font-size: 30px;
+    }
+
+    .login-form input {
+        font-size: 14px;
+    }
+}

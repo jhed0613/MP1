@@ -9,6 +9,8 @@
 <body>
 <div class="container">
   <h2>게시판 목록</h2>
+<!--  시큐리티 로그인 후 추가 -->
+  <p th:text="|${session.user.username} (${session.user.name} / ${session.user.email})|"></p>
   <table class="board_list">
     <colgroup>
       <col width="15%" />

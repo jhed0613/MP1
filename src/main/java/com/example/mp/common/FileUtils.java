@@ -66,7 +66,7 @@ public class FileUtils {
 
                 // 파일 정보를 리스트에 저장
                 BoardFileEntity entity = new BoardFileEntity();
-                // entity.setBoardIdx(boardIdx);
+//                entity.setBoardIdx(boardIdx);
                 entity.setFileSize(Long.toString(file.getSize()));
                 entity.setFileName(file.getOriginalFilename());
                 entity.setFilePath(storedDir + "/" + storedFileName);
