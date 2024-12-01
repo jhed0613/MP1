@@ -1,33 +1,28 @@
-#version: '3.8'
-#
-#services:
-#  mysql:
-#    image: mysql:latest
-#    environment:
-#      MYSQL_ROOT_PASSWORD: 1234
-#      MYSQL_DATABASE: capstone
-#    volumes:
-#      - /Users/kjh/Downloads/Docker_Sql:/var/lib/mysql
-##      - ./my.cnf:/etc/mysql/conf.d/my.cnf
-#    ports:
-#      - "3306:3306"
-##    command: --default-authentication-plugin=mysql_native_password --skip-host-cache --skip-name-resolve
-##    restart: always
-#
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - mysql
-#    environment:
-#      DB_HOST: mysql
-#      DB_PORT: 3306
-#      DB_NAME: capstone
-#      DB_USER: root
-#      DB_PASSWORD: 1234
-#
-## volumes:  # 이 부분은 더 이상 필요하지 않으므로 주석 처리
-##   mysql-data:
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: spring_app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/capstone
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+    ports:
+      - "2437:2437"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: capstone
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
