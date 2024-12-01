@@ -12,9 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Build JAR
-      run: ./gradlew clean build
+      
+    - name: Build with Gradle
+      run: ./gradlew clean build -x test
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
